@@ -47,6 +47,20 @@ functions:
       - httpApi:
           path: /videojuegos
           method: GET
+  actualizarVideojuego:
+    handler: src/handlers/actualizarVideojuego.handler
+    events:
+      - httpApi:
+          path: /UpdatedVideojuego/{id}
+          method: PUT
+  obtenerVideojuego:
+    handler: src/handlers/obtenerVideojuego.handler
+    events:
+      - httpApi:
+          path: /videojuego/{id}
+          method: GET
+  
+
 
 custom:
   bundle:
