@@ -15,6 +15,8 @@ provider:
     - Effect: Allow
       Action:
         - dynamodb:PutItem
+        - dynamodb:Scan
+        - dynamodb:GetItem
       Resource: 
         - "arn:aws:dynamodb:us-east-1:668643299204:table/VideojuegoTable"
 
@@ -39,6 +41,12 @@ functions:
       - httpApi:
           path: /videojuego
           method: POST
+  listarVideojuego:
+    handler: src/handlers/listarVideojuegos.handler
+    events:
+      - httpApi:
+          path: /videojuegos
+          method: GET
 
 custom:
   bundle:

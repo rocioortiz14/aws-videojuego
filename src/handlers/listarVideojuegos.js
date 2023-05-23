@@ -1,6 +1,5 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { DynamoDBDocumentClient, PutCommand} from "@aws-sdk/lib-dynamodb";
-import {v4  as uuidv4}  from "uuid";
+import { DynamoDBDocumentClient, ScanCommand} from "@aws-sdk/lib-dynamodb";
 import commonMiddleware from "../../lib/commonMiddleware";
 import createError from "http-errors";
 
@@ -8,15 +7,16 @@ import createError from "http-errors";
 
 const dynamo = DynamoDBDocumentClient.from(new DynamoDBClient({}));
 
-export const crearVideojuego = async(event) => {
-   try{
-    const videojuego = event.body;
+const listarVideojuegos = async(event, context) => {
+    try {
+        let videojuegos;
+
+        const result = await dynamo.send(new ScanCommand({
+            TableName: "VideojuegoTable"
+        }));
+
+        videojuegos = result.Items;
     
-    const newVideojuego = { 
-        ...videojuego,
-        id: uuidv4(), 
-        fechaIngreso: new Date().toLocaleDateString(),
-    };
 
     const headers = {
         'Content-Type': 'aplication/json',
@@ -24,16 +24,10 @@ export const crearVideojuego = async(event) => {
     };
     
 
-    await dynamo.send(new PutCommand({
-        TableName: "VideojuegoTable",
-        Item: newVideojuego,
-    }));
-    
-
     return  { 
         statusCode: 201,
         headers: headers,
-        body: JSON.stringify(newVideojuego)
+        body: JSON.stringify(videojuegos)
     };
     
 
@@ -43,4 +37,4 @@ export const crearVideojuego = async(event) => {
     }
 };
 
-export const handler = commonMiddleware(crearVideojuego);
+export const handler = commonMiddleware(listarVideojuegos);
