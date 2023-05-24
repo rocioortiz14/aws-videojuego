@@ -17,6 +17,7 @@ provider:
         - dynamodb:PutItem
         - dynamodb:Scan
         - dynamodb:GetItem
+        - dynamodb:DeleteItem
       Resource: 
         - "arn:aws:dynamodb:us-east-1:668643299204:table/VideojuegoTable"
 
@@ -59,6 +60,13 @@ functions:
       - httpApi:
           path: /videojuego/{id}
           method: GET
+  eliminarVideojuego:
+    handler: src/handlers/eliminarVideojuego.handler
+    events:
+      - httpApi:
+          path: /eliminarVideojuego/{id}
+          method: DELETE
+  
   
 
 
